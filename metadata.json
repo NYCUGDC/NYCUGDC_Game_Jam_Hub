@@ -1,0 +1,6 @@
+{
+  "name": "Game Jam Hub",
+  "description": "A hub for participating in game jams, submitting games, and tracking achievements with AI-powered evaluation. Manage your team, get the jam theme, and see how your game stacks up against various creative and technical challenges.",
+  "requestFramePermissions": [],
+  "prompt": ""
+}
