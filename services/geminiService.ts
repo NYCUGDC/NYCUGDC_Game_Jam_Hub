@@ -3,7 +3,8 @@ import { GoogleGenAI, GenerateContentResponse } from "@google/genai";
 import { Achievement, GroundingMetadata } from '../types';
 import { GEMINI_API_MODEL_TEXT, GEMINI_API_MODEL_IMAGE } from '../constants';
 
-const API_KEY = "AIzaSyCu_lMHjgSaDJbrUfJBaMLYTbBL66YDsS4";
+const API_KEY = process.env.GEMINI_API_KEY;
+const OpenAI_API_KEY = process.env.OPENAI_API_KEY;
 
 if (!API_KEY) {
   console.error("API_KEY environment variable not set. Gemini API calls will fail.");
@@ -142,7 +143,7 @@ export const generateTextWithGoogleSearch = async (
 import OpenAI from "openai";
 
 const openai = new OpenAI({
-  apiKey: "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",
+  apiKey: OpenAI_API_KEY,
   dangerouslyAllowBrowser: true, // ⚠️ 僅限開發使用，不建議部署
 });
 

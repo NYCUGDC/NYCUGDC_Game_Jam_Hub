@@ -23,6 +23,7 @@ const AuthPage: React.FC = () => {
   const [showRegPassword, setShowRegPassword] = useState(false);
   const [showRegConfirmPassword, setShowRegConfirmPassword] = useState(false);
   const [members, setMembers] = useState<Partial<Omit<TeamMember, 'id'>>[]>([{ name: '', gender: undefined, role: '' }]);
+  const [autoGenerateAvatar, setAutoGenerateAvatar] = useState(false); // New state for toggle
   
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
@@ -58,7 +59,12 @@ const AuthPage: React.FC = () => {
     setError(null);
     setLoading(true);
     try {
-      const registeredTeam = await register(regTeamName, regPassword, members as Omit<TeamMember, 'id'>[]);
+      const registeredTeam = await register(
+        regTeamName, 
+        regPassword, 
+        members as Omit<TeamMember, 'id'>[],
+        autoGenerateAvatar // Pass toggle state
+      );
       if (registeredTeam) {
         navigate('/team');
       } else {
@@ -205,6 +211,22 @@ const AuthPage: React.FC = () => {
                 <button type="button" onClick={() => setShowRegConfirmPassword(!showRegConfirmPassword)} className="absolute inset-y-0 right-0 pr-3 flex items-center text-slate-500 hover:text-slate-300">
                   {showRegConfirmPassword ? <EyeSlashIcon className="h-5 w-5" /> : <EyeIcon className="h-5 w-5" />}
                 </button>
+              </div>
+            </div>
+
+            <div className="my-5"> {/* Adjusted margin for spacing */}
+              <div className="flex items-center justify-between py-2">
+                <span className="text-sm font-medium text-slate-300">自動生成小組頭像 (Auto-generate team avatar?)</span>
+                <label htmlFor="autoGenerateAvatarToggle" className="relative inline-flex items-center cursor-pointer">
+                  <input
+                    type="checkbox"
+                    id="autoGenerateAvatarToggle"
+                    className="sr-only peer"
+                    checked={autoGenerateAvatar}
+                    onChange={() => setAutoGenerateAvatar(!autoGenerateAvatar)}
+                  />
+                  <div className="w-11 h-6 bg-slate-600 peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-offset-2 peer-focus:ring-offset-slate-800 peer-focus:ring-cyan-500 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-cyan-600"></div>
+                </label>
               </div>
             </div>
             

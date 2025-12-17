@@ -5,8 +5,8 @@ import { DEFAULT_THEME } from '../constants';
 
 const ThemePage: React.FC = () => {
   const { theme } = useGameData();
-  //const currentTheme = theme || DEFAULT_THEME; // Fallback to default if somehow null
-  const currentTheme = DEFAULT_THEME;
+  const currentTheme = theme || DEFAULT_THEME; // Fallback to default if somehow null
+  //const currentTheme = DEFAULT_THEME;
 
   return (
     <div className="container mx-auto p-4 md:p-8">

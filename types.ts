@@ -31,6 +31,12 @@ export interface TeamMember {
   role: string; // e.g., Programmer, Artist, Designer
 }
 
+export interface GameSubmission {
+  timestamp: number;
+  description: string;
+  evaluatedAchievementIds: string[]; // Achievements unlocked with this specific submission
+}
+
 export interface Team {
   id: string;
   name: string;
@@ -38,7 +44,7 @@ export interface Team {
   members: TeamMember[];
   pixelArtTeamRepresentation: string; // Could be a serialized config or SVG string
   earnedAchievementIds: string[];
-  gameSubmissionText?: string;
+  gameSubmissions: GameSubmission[];
 }
 
 export interface GameDataContextType {
@@ -54,7 +60,12 @@ export interface AuthContextType {
   currentTeam: Team | null;
   login: (teamName: string, passwordAttempt: string) => Promise<boolean>;
   logout: () => void;
-  register: (teamName: string, passwordRaw: string, members: Omit<TeamMember, 'id'>[]) => Promise<Team | null>;
+  register: (
+    teamName: string,
+    passwordRaw: string,
+    members: Omit<TeamMember, 'id'>[],
+    autoGenerateAvatar: boolean // Added new parameter
+  ) => Promise<Team | null>;
   updateCurrentTeam: (team: Team) => void;
   teams: Team[]; // For admin or lookup, in a real app this would be backend managed
 }

@@ -3,7 +3,7 @@ import React from 'react';
 import { useAuth } from '../contexts/AuthContext';
 import { useGameData } from '../contexts/GameDataContext';
 import TeamPixelArt from '../components/TeamPixelArt';
-import { Team } from '../types';
+import { Team, TeamMember } from '../types';
 import { TrophyIcon, UserIcon } from '../constants';
 
 const AllTeamsPage: React.FC = () => {
@@ -51,6 +51,23 @@ const AllTeamsPage: React.FC = () => {
                   teamName={team.name}
                   className="max-w-full max-h-full object-contain"
                 />
+              </div>
+              <div className="mb-4">
+                <h3 className="text-md font-medium text-sky-300 mb-2 flex items-center">
+                  <UserIcon className="w-5 h-5 mr-2 text-sky-400" />
+                  Team Members:
+                </h3>
+                {team.members && team.members.length > 0 ? (
+                  <ul className="list-disc list-inside space-y-1 pl-1">
+                    {team.members.map((member: TeamMember) => (
+                      <li key={member.id} className="text-slate-300 text-sm">
+                        {member.name}
+                      </li>
+                    ))}
+                  </ul>
+                ) : (
+                  <p className="text-slate-500 text-sm">No members listed for this team.</p>
+                )}
               </div>
               <div>
                 <h3 className="text-md font-medium text-yellow-400 mb-2 flex items-center">

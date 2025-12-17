@@ -40,7 +40,7 @@ export const INITIAL_ACHIEVEMENTS: Achievement[] = [
     name: "哦~痛苦",
     description: "畫面不能與landscape夾角小於30度",
     iconUrl: "https://media.nownews.com/nn_media/thumbnail/2022/04/1649570866560-a0e42b41685148809ac6ab0d478a2a88-800x533.jpg?unShow=false", // Placeholder
-    criteria: "畫面不能與landscape夾角小於30度",
+    criteria: "畫面不能與landscape夾角小於30度(也就是可能會歪頭玩遊戲、畫面是歪的等等)",
   },
   {
     id: "程式類1",
@@ -54,7 +54,7 @@ export const INITIAL_ACHIEVEMENTS: Achievement[] = [
     name: "遊戲縫合怪",
     description: "Genre差距大、或使用兩種以上引擎或語言開發",
     iconUrl: "https://static.wixstatic.com/media/f8429d_3df100904bdd4bf3b973de3e580b8dc6~mv2.png/v1/fill/w_560,h_318,al_c,q_85,usm_0.66_1.00_0.01,enc_avif,quality_auto/Image-empty-state.png", // Placeholder
-    criteria: "Genre差距大、或使用兩種以上引擎或語言開發",
+    criteria: "遊戲內Genre差距大(例如：遊戲風格與玩法截然不同)、或使用兩種以上引擎或語言開發",
   },
   {
     id: "美術類1",

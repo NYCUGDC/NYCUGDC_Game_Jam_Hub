@@ -194,6 +194,21 @@ const AdminPage: React.FC = () => {
             Reset to Default Achievements
         </button>
       </section>
+      {/* Data Reset Button - Admin Only (for development/localStorage clearing) */}
+      <div className="mt-12 text-center">
+        <button
+          onClick={() => {
+            if (confirm("Are you sure you want to reset all team and login data? This cannot be undone.")) {
+              localStorage.clear();
+              window.location.reload();
+            }
+          }}
+          className="bg-red-800 hover:bg-red-900 text-white font-bold py-2 px-6 rounded-lg transition-colors"
+        >
+          🔥 Clear ALL Local Data (Teams + Auth)
+        </button>
+        <p className="mt-2 text-sm text-slate-400">This removes all locally stored teams, login data, theme, and achievements.</p>
+      </div>
     </div>
   );
 };

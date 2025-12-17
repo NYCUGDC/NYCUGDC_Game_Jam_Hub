@@ -50,7 +50,8 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   const register = useCallback(async (
     teamName: string, 
     passwordRaw: string, 
-    membersData: Omit<TeamMember, 'id'>[]
+    membersData: Omit<TeamMember, 'id'>[],
+    autoGenerateAvatar: boolean // New parameter
   ): Promise<Team | null> => {
     if (teams.some(t => t.name === teamName)) {
       throw new Error("Team name already exists.");
@@ -60,7 +61,14 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       id: `member-${Date.now()}-${index}`
     }));
 
-    const pixelArtRepresentation = await generateTeamPixelArtDataUri(teamName, newMembers);
+    //const pixelArtRepresentation = await generateTeamPixelArtDataUri(teamName, newMembers);
+    let pixelArtRepresentation: string;
+    if (autoGenerateAvatar) {
+      pixelArtRepresentation = await generateTeamPixelArtDataUri(teamName, newMembers);
+    } else {
+      const seed = teamName.replace(/\s+/g, '-').toLowerCase(); // Create a seed from team name
+      pixelArtRepresentation = `https://picsum.photos/seed/${seed}/400/300`; // Placeholder image URL
+    }
 
     const newTeam: Team = {
       id: `team-${Date.now()}`,
@@ -69,7 +77,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       members: newMembers,
       pixelArtTeamRepresentation: pixelArtRepresentation,
       earnedAchievementIds: [],
-      gameSubmissionText: '', // Initialize gameSubmissionText
+      gameSubmissions: [], // Initialize gameSubmissionText
     };
     setTeams(prevTeams => [...prevTeams, newTeam]);
     setCurrentTeamId(newTeam.id); // Auto-login after registration

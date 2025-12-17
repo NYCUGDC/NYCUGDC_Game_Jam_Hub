@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import { useGameData } from '../contexts/GameDataContext';
 import { evaluateAchievementsWithGemini, AchievementEvaluationResult } from '../services/geminiService';
+import { GameSubmission } from '../types'; // Import GameSubmission
 import { ArrowPathIcon } from '../constants';
 
 const SubmissionPage: React.FC = () => {
@@ -11,7 +12,14 @@ const SubmissionPage: React.FC = () => {
   const { achievements } = useGameData();
   const navigate = useNavigate();
 
-  const [gameDescription, setGameDescription] = useState<string>(currentTeam?.gameSubmissionText || '');
+  const getLatestSubmissionDescription = () => {
+    if (currentTeam && currentTeam.gameSubmissions && currentTeam.gameSubmissions.length > 0) {
+      return currentTeam.gameSubmissions[currentTeam.gameSubmissions.length - 1].description;
+    }
+    return '';
+  };
+
+  const [gameDescription, setGameDescription] = useState<string>('');
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
   const [evaluationResult, setEvaluationResult] = useState<AchievementEvaluationResult | null>(null);
@@ -20,7 +28,7 @@ const SubmissionPage: React.FC = () => {
     if (!currentTeam) {
       navigate('/auth');
     } else {
-        setGameDescription(currentTeam.gameSubmissionText || '');
+        setGameDescription(getLatestSubmissionDescription());
     }
   }, [currentTeam, navigate]);
 
@@ -42,11 +50,17 @@ const SubmissionPage: React.FC = () => {
       if (result.error) {
         setError(result.error);
       } else {
-        // Update team's earned achievements
+        const newSubmission: GameSubmission = {
+          timestamp: Date.now(),
+          description: gameDescription,
+          evaluatedAchievementIds: result.achievedIds,
+        };
         const updatedTeam = { 
           ...currentTeam, 
-          earnedAchievementIds: [...new Set([...currentTeam.earnedAchievementIds, ...result.achievedIds])], // Merge and deduplicate
-          gameSubmissionText: gameDescription,
+          // Merge and deduplicate overall earned achievements
+          earnedAchievementIds: [...new Set([...currentTeam.earnedAchievementIds, ...result.achievedIds])], 
+          // Add new submission to history
+          gameSubmissions: [...currentTeam.gameSubmissions, newSubmission],
         };
         updateCurrentTeam(updatedTeam);
       }
@@ -76,6 +90,7 @@ const SubmissionPage: React.FC = () => {
           </label>
           <p className="text-sm text-slate-400 mb-3">
             Provide a detailed description of your game. The more information you give about its mechanics, story, art style, sound, etc., the better the AI can evaluate your achievements.
+            Your latest submission text is pre-filled below.
           </p>
           <textarea
             id="gameDescription"

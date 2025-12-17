@@ -16,7 +16,11 @@ const Navbar: React.FC = () => {
   return (
     <nav className="bg-slate-800 shadow-lg p-4">
       <div className="container mx-auto flex justify-between items-center">
-        <Link to="/" className="text-2xl font-bold text-cyan-400 hover:text-cyan-300 transition-colors">
+        <Link
+          to="/"
+          className="flex items-center gap-2 text-2xl font-bold text-cyan-400 hover:text-cyan-300 transition-colors"
+        >
+          <img src="/icons/logo-export.png" alt="Icon" className="w-8 h-8" />
           {APP_NAME}
         </Link>
         <div className="space-x-4 flex items-center">

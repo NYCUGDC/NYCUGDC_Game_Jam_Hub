@@ -7,7 +7,7 @@ import TeamPixelArt from '../components/TeamPixelArt';
 import AchievementCard from '../components/AchievementCard';
 import PixelArtAvatar from '../components/PixelArtAvatar';
 import { UserIcon, TrophyIcon } from '../constants';
-import { Achievement } from '../types'; // Added import
+import { Achievement, GameSubmission } from '../types'; 
 
 const TeamDashboardPage: React.FC = () => {
   const { currentTeam } = useAuth();
@@ -31,6 +31,8 @@ const TeamDashboardPage: React.FC = () => {
   const earnedAchievementsFull = currentTeam.earnedAchievementIds
     .map(id => getAchievementById(id))
     .filter(ach => ach !== undefined) as Achievement[];
+
+  const submissionHistory = currentTeam.gameSubmissions ? [...currentTeam.gameSubmissions].reverse() : [];
 
   return (
     <div className="container mx-auto p-4 md:p-8">
@@ -96,17 +98,46 @@ const TeamDashboardPage: React.FC = () => {
           )}
         </section>
       </div>
-       {currentTeam.gameSubmissionText && (
-        <section className="mt-8 bg-slate-800 p-6 rounded-lg shadow-lg">
-          <h2 className="text-2xl font-semibold text-green-400 mb-4">
-            Latest Game Submission
-          </h2>
-          <div className="bg-slate-700/50 p-4 rounded-md">
-            <h3 className="text-lg font-medium text-slate-300 mb-2">Game Description:</h3>
-            <pre className="whitespace-pre-wrap text-sm text-slate-300 font-mono bg-slate-900/30 p-3 rounded">{currentTeam.gameSubmissionText}</pre>
+       {/* Game Submission History Section */}
+      <section className="mt-8 bg-slate-800 p-6 rounded-lg shadow-lg">
+        <h2 className="text-2xl font-semibold text-green-400 mb-4">
+          Game Submission History
+        </h2>
+        {submissionHistory.length > 0 ? (
+          <div className="space-y-6">
+            {submissionHistory.map((submission: GameSubmission, index: number) => (
+              <div key={submission.timestamp} className="bg-slate-700/50 p-4 rounded-md shadow-md">
+                <div className="flex justify-between items-center mb-2">
+                    <h3 className="text-lg font-medium text-slate-300">
+                        Submission #{submissionHistory.length - index}
+                    </h3>
+                    <span className="text-xs text-slate-400">{new Date(submission.timestamp).toLocaleString()}</span>
+                </div>
+                
+                <h4 className="text-md font-semibold text-slate-200 mt-3 mb-1">Game Description:</h4>
+                <pre className="whitespace-pre-wrap text-sm text-slate-300 font-mono bg-slate-900/30 p-3 rounded">{submission.description}</pre>
+                
+                {submission.evaluatedAchievementIds && submission.evaluatedAchievementIds.length > 0 && (
+                  <div className="mt-3">
+                    <h4 className="text-md font-semibold text-slate-200 mb-1">Achievements unlocked with this submission:</h4>
+                    <ul className="list-disc list-inside text-sm text-slate-300 pl-4 space-y-1">
+                      {submission.evaluatedAchievementIds.map(id => {
+                        const ach = getAchievementById(id);
+                        return <li key={id}>{ach ? ach.name : `Unknown Achievement (ID: ${id})`}</li>;
+                      })}
+                    </ul>
+                  </div>
+                )}
+                 {(!submission.evaluatedAchievementIds || submission.evaluatedAchievementIds.length === 0) && (
+                    <p className="text-sm text-slate-500 mt-3">No specific achievements were unlocked with this particular submission version according to the AI evaluation at the time.</p>
+                )}
+              </div>
+            ))}
           </div>
+        ) : (
+          <p className="text-slate-500">No game submissions yet. Head to the Submit page to make your first one!</p>
+        )}
         </section>
-      )}
     </div>
   );
 };
